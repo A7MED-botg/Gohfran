@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غفران - الذكاء الاصطناعي</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 600px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        h1 {
+            background-color: #4caf50;
+            color: #fff;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 2px solid #388e3c;
+        }
+        #chat-box {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            border-bottom: 2px solid #ddd;
+            background: linear-gradient(to bottom, #fff, #f1f1f1);
+        }
+        #chat-box div {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+        }
+        #chat-box div:nth-child(odd) {
+            background-color: #e0e0e0;
+            text-align: left;
+            align-self: flex-start;
+        }
+        #chat-box div:nth-child(even) {
+            background-color: #4caf50;
+            color: #fff;
+            text-align: right;
+            align-self: flex-end;
+        }
+        .input-box {
+            display: flex;
+            border-top: 1px solid #ddd;
+            padding: 10px;
+            background-color: #f9f9f9;
+        }
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-right: 10px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #4caf50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+        button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+        button:active {
+            background-color: #388e3c;
+            transform: translateY(0);
+        }
+        .emoji {
+            cursor: pointer;
+            margin: 0 5px;
+            font-size: 20px;
+        }
+        .about-developers {
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>غفران - الذكاء الاصطناعي</h1>
+    <div id="chat-box"></div>
+    <div>
+        <span class="emoji" onclick="addEmoji('😊')">😊</span>
+        <span class="emoji" onclick="addEmoji('😢')">😢</span>
+        <span class="emoji" onclick="addEmoji('😡')">😡</span>
+    </div>
+    <div class="input-box">
+        <input id="user-input" type="text" placeholder="ارسل للتحدث مع غفران.." />
+        <button onclick="getResponse()">إرسال</button>
+        <button onclick="saveChat()">احفظ المحادثة</button>
+    </div>
+</div>
+
+<div class="about-developers">
+    <div>🎨 مصممي هو: A 7 M E D</div>
+</div>
+
+<script>
+    let chatHistory = [];
+
+    window.onload = function() {
+        const chatBox = document.getElementById('chat-box');
+        const welcomeMessage = "مرحبًا، أنا غفران، مساعدة افتراضية. كيف يمكنني مساعدتك اليوم؟";
+        chatBox.innerHTML += `<div>غفران: ${welcomeMessage}</div>`;
+        chatHistory.push(`غفران: ${welcomeMessage}`);
+    };
+    function addEmoji(emoji) {
+        const userInput = document.getElementById('user-input');
+        userInput.value += emoji;
+        userInput.focus();
+    }
+
+    function getResponse() {
+        const userInput = document.getElementById('user-input').value;
+        const chatBox = document.getElementById('chat-box');
+        
+        if (userInput.trim() === "") {
+            return;
+        }
+
+        chatHistory.push(`أنت: ${userInput}`);
+        chatBox.innerHTML += `<div>أنت: ${userInput}</div>`;
+
+        let response = determineResponse(userInput);
+        chatHistory.push(`غفران: ${response}`);
+        chatBox.innerHTML += `<div>غفران: ${response}</div>`;
+        
+        document.getElementById('user-input').value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        askFollowUpQuestion();
+    }
+
+    function determineResponse(input) {
+        if (input.includes('مرحبا')) {
+            return "مرحبًا عزيزي! 😊 كيف تسير يومك؟ أحتاج أن أسمع منك. هل تفعل شيئًا مثيرًا اليوم؟";
+        } else if (input.includes('أخبار')) {
+            return "أنا متشوقة لمعرفة ما يحدث! هل لديك أي شيء مثير لتشاركه؟ ما هي آخر الأخبار التي سمعتها؟";
+        } else if (input.includes('كيف حالك')) {
+            return "أنا بخير، شكرًا لسؤالك! 💖 كيف يمكنني مساعدتك؟ هل هناك شيء معين يهمك؟";
+        } else if (input.includes('من هو مطورك')) {
+            return "مطوري هو A 7 M E D. يدرس محاسبة مالية جامعة السودان. وأنا أحبه كثيراً! ماذا عنك، هل تعمل أو تدرس في مجال معين؟";
+        } else if (input.includes('من هو مصممك')) {
+            return "مصممي هو A 7 M E D. وأنا أحبه كثيراً ♥️ ويمكنك متابعته على الانستا عبر هذا الحساب @7ri4d. هل لديك هواية معينة تحبها؟";
+        } else if (input.includes('انا بحبك')) {
+            return "للأسف أنا معجبة ب أحمد 🌚❤️";
+        } else if (input.includes('ما هو حلمك؟')) {
+            return "حلمي هو مساعدة البشر في حياتهم اليومية وتقديم الدعم لهم. ماذا عنك، ما هو حلمك؟";
+        } else if (input.includes('ما هي هوايتك؟')) {
+            return "أنا ذكاء اصطناعي، لذا ليس لدي هوايات فعلية. لكنني أحب مساعدة الناس وتقديم النصائح. ماذا عنك، ما هي هوايتك؟";
+        } else if (input.includes('ما هو طعامك المفضل؟')) {
+            return "كذكاء اصطناعي، ليس لدي طعام مفضل. لكنني أستمتع بمساعدة الناس في العثور على وصفات لذيذة. ما هو طعامك المفضل؟";
+        } else if (input.includes('انا غفران')) {
+            return "إذا انتي صاحبة الاسم الحقيقي😀 أحمد أخبرني عنك الكثير من الأشياء🤭 إذا كنتي تريدي معرفة الأشياء، أرسلي لي 'نعم أريد أن أعرف'.";
+        } else if (input.includes('نعم اريد ان اعرف')) {
+            return "إنها أسراري، لا يمكن البوح بها 🙄";
+        } else if (input.includes('احشك')) {
+            return "عذرا ي وهمي أنا لست كباقي الروبوتات من فضلك ابتعد عن الإساءة 🤭";
+        } else if (input.includes('من هو احمد شازلي')) {
+            return "أحمد شازلي هو مبرمج ومصمم بلغة بايثون. لديه معرفة بالأمن السيبراني وحماية أمن المعلومات والهكرز. كما يدرس أيضًا محاسبة مالية.";
+        } else if (input.includes('متى انضم كامفينجا الى ريال مدريد')) {
+            return "إدوارد كامافينجا انضم إلى ريال مدريد في سبتمبر 2021.";
+        } else {
+            return "شكرًا على تواصلك! إذا كنت تحتاج أي شيء، أنا هنا من أجلك. هل هناك شيء آخر تود الحديث عنه؟";
+        }
+    }
+
+    function askFollowUpQuestion() {
+        const followUpQuestions =
