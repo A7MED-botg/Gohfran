@@ -1,0 +1,73 @@
+
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>غفران </title>
+    <link rel="stylesheet" href="style.css"> <!-- رابط ملف CSS -->
+</head>
+<body>
+    <h1>غفران </h1>
+    <p id="welcomeMessage">مرحبًا! أنا غفران. كيف يمكنني مساعدتك اليوم؟</p>
+    <textarea id="inputText" placeholder="أدخل سؤالك هنا..." rows="5"></textarea>
+    <br>
+    <button onclick="sendToAI()">إرسال</button>
+    <div id="response">الرد سيظهر هنا...</div>
+    <footer>
+        تطوير بواسطة: <a href="#" target="_blank">A7MED</a>
+    </footer>
+
+    <script>
+        function sendToAI() {
+            const inputText = document.getElementById("inputText").value;
+
+            if (inputText.trim() === "") {
+                document.getElementById("response").innerText = "الرجاء إدخال نص للتفاعل.";
+                return;
+            }
+
+            // الردود المخصصة للأسئلة الشائعة
+            if (inputText === "ما هو مطورك") {
+                document.getElementById("response").innerText = "مطوري هو A7MED.";
+                return;
+            }
+            if (inputText === "ما هو اسمك") {
+                document.getElementById("response").innerText = "اسمي هو غفران.";
+                return;
+            }
+
+            // الرد المخصص لكلمة "أحشك"
+            if (inputText === "أحشك") {
+                document.getElementById("response").innerText = "عذرا  أيها الوهمي، أنا ذكاء اصطناعي. من فضلك الزم الصمت 😀";
+                return;
+            }
+
+            const xhr = new XMLHttpRequest();
+            xhr.withCredentials = true;
+
+            xhr.addEventListener('readystatechange', function () {
+                if (this.readyState === this.DONE) {
+                    try {
+                        const response = JSON.parse(this.responseText);
+                        if (response) {
+                            document.getElementById("response").innerText = response.message || "لم يتم العثور على رد.";
+                        } else {
+                            document.getElementById("response").innerText = "لم يتم الحصول على رد. حاول مرة أخرى.";
+                        }
+                    } catch (error) {
+                        document.getElementById("response").innerText = "حدث خطأ أثناء معالجة الرد.";
+                    }
+                }
+            });
+
+            // إعداد الطلب
+            xhr.open('GET', 'https://chatgpt-42.p.rapidapi.com/');
+            xhr.setRequestHeader('x-rapidapi-key', '254e2b0127msh8220214a0f5a5cep1f2f5ajsn772a0d6316d9');
+            xhr.setRequestHeader('x-rapidapi-host', 'chatgpt-42.p.rapidapi.com');
+            xhr.send(null);
+        }
+    </script>
+</body>
+</html>
+
